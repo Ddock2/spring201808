@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+		
+		<bean class="di_xml02.KoreaTire" id="koreaTire" />
+		<bean class="di_xml02.NexenTire" id="nexenTire" />
+		
+		<!-- 
+			Car car = new Car();
+			car.setTire(new KoreaTire());
+		 -->
+		<bean class="di_xml02.Car" id="car">
+			<property name="tire" ref="koreaTire" />	<!-- setter 역활 -->
+		</bean>
+</beans>
