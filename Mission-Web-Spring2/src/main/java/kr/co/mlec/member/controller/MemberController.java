@@ -1,0 +1,66 @@
+package kr.co.mlec.member.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.co.mlec.member.service.MemberService;
+import kr.co.mlec.member.vo.MemberVO;
+
+@SessionAttributes({"userVO"})
+@Controller
+public class MemberController {
+
+	@Autowired
+	private MemberService memberService;
+	
+	@RequestMapping(value="/login/login.do", method=RequestMethod.GET)	
+	public String login() {
+		
+		return "login/login";
+	}
+	
+	@RequestMapping(value="/login/login.do", method=RequestMethod.POST)
+	public ModelAndView loginProcess(@ModelAttribute MemberVO member) {
+
+		ModelAndView mav = new ModelAndView();
+		
+		MemberVO userVO = memberService.login(member);
+		if(userVO == null) {
+			mav.addObject("msg", "아이디 또는 패스워드가 잘못되었습니다");
+			mav.setViewName("login/login");
+		} else {
+
+			// 세션 등록
+			mav.addObject("userVO", userVO);
+			mav.setViewName("redirect:/");
+		}	
+		
+		return mav;
+	}
+/*	
+	@RequestMapping(value="/login/login.do", method=RequestMethod.POST)
+	public void loginProcess(@RequestParam("id") String id,
+			@RequestParam("password") String password){
+		
+		System.out.println(id + " : " + password);
+	}
+*/
+	
+	@RequestMapping("/login/logout.do")
+	public String logout(SessionStatus sessionStatus) {
+		
+		sessionStatus.setComplete();
+		
+		return "redirect:/";
+	}
+	
+}
